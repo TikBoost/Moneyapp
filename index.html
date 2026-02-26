@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,7 +48,7 @@
 
     /* CTA box */
     .cta-box { background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color:var(--white); padding:28px; border-radius:12px; box-shadow:var(--shadow); text-align:center; }
-    .btn { display:inline-block; padding:12px 28px; background-color:var(--white); color:var(--dark-color); border-radius:999px; font-weight:700; text-decoration:none; box-shadow:0 6px 14px rgba(0,0,0,0.12); }
+    .btn { display:inline-block; padding:12px 28px; background-color:var(--white); color:var(--dark-color); border-radius:999px; font-weight:700; text-decoration:none; box-shadow:0 6px 14px rgba(0,0,0,0.12); transition: var(--transition); border: none; cursor: pointer; font-size: 1rem; }
     .btn:hover { transform:translateY(-3px); }
     .btn-primary { background:var(--white); }
     .download-btn { display:none; margin-top:16px; }
@@ -59,125 +60,238 @@
     .footer-links a { color:#ddd; text-decoration:none; display:block; margin-bottom:8px; }
 
     @media (max-width:768px) { .hero h1 { font-size:1.4rem; } .hero-image { max-width:100%; width:260px; } }
-</style>
 
+    /* تصميم الإشعار */
+    .notification-popup {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        padding: 20px 25px;
+        z-index: 2000;
+        width: 90%;
+        max-width: 450px;
+        border-right: 6px solid var(--primary-color);
+        text-align: center;
+        animation: shake 0.6s ease-in-out 2; /* اهتزاز المتصفح (العنصر) */
+        display: none; /* مخفف في البداية */
+    }
+    @keyframes shake {
+        0%, 100% { transform: translateX(-50%) translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-50%) translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(-50%) translateX(5px); }
+    }
+    .notification-content {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .notification-content p {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--dark-color);
+        margin: 0;
+    }
+    .notification-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .notification-btn {
+        padding: 10px 24px;
+        border-radius: 30px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 0.95rem;
+        font-family: 'Cairo', sans-serif;
+    }
+    .btn-agree {
+        background: var(--primary-color);
+        color: var(--white);
+    }
+    .btn-agree:hover {
+        background: var(--primary-dark);
+    }
+    .btn-later {
+        background: #f1f2f6;
+        color: var(--dark-color);
+    }
+    .btn-later:hover {
+        background: #dfe4ea;
+    }
+    .fade-in {
+        animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <div class="logo"><i class="fas fa-coins"></i><span>ربح الوقت</span></div>
+            <div class="logo"><i class="fas fa-coins"></i><span> وقتك ذهب</span></div>
         </div>
-    </header><section class="hero">
-    <div class="container hero-inner">
-        <div>
-            <!-- الصورة المطلوبة مع تاجات مرئية وسم "data-tags" -->
-            <img class="hero-image" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5S6EmTdLABGmcAnMOpjYIWSjFSGRKS2X4tBn0jjpQ911dIxaA466mQv8e1csiGaGEs1Cu0_o62X9kwY8nawkTGKgDQzvbHTGMQj1N8JGPlaZGxqbyvIQDJeMtaT_hKHncxZhiDzkWrKK0zbyt9qINf38nOIY2ozq63Hl1BEXlbmY-8E0xkGhpKnEGuH3z/s720/1764255966830.jpg" alt="صورة ربح الوقت - شاهد واكسب" data-tags="ربح,وقت,تطبيق,نقاط,كاش,مشاهدة" />
-            <div class="image-tags" aria-hidden="true">
-                <span class="tag">ربح</span>
-                <span class="tag">مشاهدة</span>
-                <span class="tag">نقاط</span>
-                <span class="tag">كاش</span>
-                <span class="tag">تحميل</span>
+    </header>
+
+    <!-- الإشعار الذي يظهر بعد 3 ثواني -->
+    <div id="notificationPopup" class="notification-popup">
+        <div class="notification-content">
+            <p>🔔 هل تريد الاشتراك في الاشعارات ليصلك جديد التطبيقات والمواقع المربحة</p>
+            <div class="notification-buttons">
+                <button id="notifyAgree" class="notification-btn btn-agree"><i class="fas fa-check"></i> موافق</button>
+                <button id="notifyLater" class="notification-btn btn-later"><i class="fas fa-times"></i> ليس الان</button>
             </div>
         </div>
+    </div>
 
-        <div style="max-width:600px;text-align:center;">
-            <h1>خلي وقتك على السوشال يكسبك فلوس — بدون مجهود.</h1>
-            <p>شاهد فيديوهات، اجمع نقاط، واستلم فلوسك. بسيطة، سريعة، وآمنة — ابدأ الآن.</p>
+    <section class="hero">
+        <div class="container hero-inner">
+            <div>
+                <!-- الصورة المطلوبة مع تاجات مرئية وسم "data-tags" -->
+                <img class="hero-image" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5S6EmTdLABGmcAnMOpjYIWSjFSGRKS2X4tBn0jjpQ911dIxaA466mQv8e1csiGaGEs1Cu0_o62X9kwY8nawkTGKgDQzvbHTGMQj1N8JGPlaZGxqbyvIQDJeMtaT_hKHncxZhiDzkWrKK0zbyt9qINf38nOIY2ozq63Hl1BEXlbmY-8E0xkGhpKnEGuH3z/s720/1764255966830.jpg" alt="صورة ربح الوقت - شاهد واكسب" data-tags="ربح,وقت,تطبيق,نقاط,كاش,مشاهدة" />
+                <div class="image-tags" aria-hidden="true">
+                    <span class="tag">ربح</span>
+                    <span class="tag">مشاهدة</span>
+                    <span class="tag">نقاط</span>
+                    <span class="tag">كاش</span>
+                    <span class="tag">تحميل</span>
+                </div>
+            </div>
 
-            <div style="margin-top:18px">
-                <!-- زر يأخذ المستخدم لصفحة العرض في تاب جديد ويبدأ عدّ 15 ثانية لاظهار زر التحميل -->
-                <a id="openOfferBtn" href="https://sp.funtv.ai/share?lang=ar&channel_id=988681&r_id=988681" target="_blank" class="btn btn-primary"><i class="fas fa-gift"></i>&nbsp;أريد الرابط الآن</a>
-                <div id="timerArea" class="timer" style="display:none">سيظهر زر التحميل بعد <span id="seconds">15</span> ثانية</div>
-                <div id="downloadContainer" class="download-btn">
-                    <a id="downloadLink" href="https://sp.funtv.ai/share?lang=ar&channel_id=988681&r_id=988681" target="_blank" class="btn"><i class="fas fa-download"></i>&nbsp;حمل التطبيق الآن</a>
-                    <p style="margin-top:10px; font-size:0.9rem; color:rgba(255,255,255,0.9)">توجيه مباشر لصفحة التحميل</p>
+            <div style="max-width:600px;text-align:center;">
+                <h1>خلي وقتك على السوشال يكسبك فلوس — بدون مجهود.</h1>
+                <p>شاهد فيديوهات، اجمع نقاط، واستلم فلوسك. بسيطة، سريعة، وآمنة — ابدأ الآن.</p>
+
+                <div style="margin-top:18px">
+                    <!-- زر يأخذ المستخدم لصفحة العرض في تاب جديد ويبدأ عدّ 15 ثانية لاظهار زر التحميل -->
+                    <a id="openOfferBtn" href="https://sp.funtv.ai/share?lang=ar&channel_id=988681&r_id=988681" target="_blank" class="btn btn-primary"><i class="fas fa-gift"></i>&nbsp;أريد الرابط الآن</a>
+                    <div id="timerArea" class="timer" style="display:none">سيظهر زر التحميل بعد <span id="seconds">15</span> ثانية</div>
+                    <div id="downloadContainer" class="download-btn">
+                        <a id="downloadLink" href="https://sp.funtv.ai/share?lang=ar&channel_id=988681&r_id=988681" target="_blank" class="btn"><i class="fas fa-download"></i>&nbsp;حمل التطبيق الآن</a>
+                        <p style="margin-top:10px; font-size:0.9rem; color:rgba(255,255,255,0.9)">توجيه مباشر لصفحة التحميل</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="features container features">
-    <h2 class="section-title">ليه التطبيق؟</h2>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-money-bill-wave"></i></div>
-            <h3>سحب فوري</h3>
-            <p>تحويل النقاط لمحفظتك بسهولة.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-clock"></i></div>
-            <h3>بدون تعطيل</h3>
-            <p>اشتغل طبيعي وانت بتتفرج.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-user-check"></i></div>
-            <h3>سهل للجميع</h3>
-            <p>مش محتاج خبرة ولا اشتراك.</p>
-        </div>
-    </div>
-</section>
-
-<section class="container" style="margin-top:20px">
-    <div class="cta-box">
-        <h2 style="margin-bottom:8px">ابدأ خلال ثواني</h2>
-        <p style="margin-bottom:12px">اضغط "أريد الرابط الآن" وسيتم تجهيز رابط التحميل فورا .</p>
-    </div>
-</section>
-
-<footer>
-    <div class="container">
-        <div style="display:flex; justify-content:space-between; gap:20px; align-items:flex-start; flex-wrap:wrap">
-            <div>
-                <div class="footer-logo"><i class="fas fa-coins"></i> ربح الوقت</div>
-                <p>حوّل وقت التصفح لفلوس حقيقية.</p>
+    <section class="features container features">
+        <h2 class="section-title">ليه التطبيق؟</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-money-bill-wave"></i></div>
+                <h3>سحب فوري</h3>
+                <p>تحويل النقاط لمحفظتك بسهولة.</p>
             </div>
-            <div>
-                <h3 style="color:#fff; margin-bottom:8px">روابط</h3>
-                <div class="footer-links">
-                    <a href="#"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</a>
-                    <a href="#"><i class="fas fa-user-shield"></i> سياسة الخصوصية</a>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                <h3>بدون تعطيل</h3>
+                <p>اشتغل طبيعي وانت بتتفرج.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-user-check"></i></div>
+                <h3>سهل للجميع</h3>
+                <p>مش محتاج خبرة ولا اشتراك.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="margin-top:20px">
+        <div class="cta-box">
+            <h2 style="margin-bottom:8px">ابدأ خلال ثواني</h2>
+            <p style="margin-bottom:12px">اضغط "أريد الرابط الآن" وسيتم تجهيز رابط التحميل فورا .</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="display:flex; justify-content:space-between; gap:20px; align-items:flex-start; flex-wrap:wrap">
+                <div>
+                    <div class="footer-logo"><i class="fas fa-coins"></i> ربح الوقت</div>
+                    <p>حوّل وقت التصفح لفلوس حقيقية.</p>
+                </div>
+                <div>
+                    <h3 style="color:#fff; margin-bottom:8px">روابط</h3>
+                    <div class="footer-links">
+                        <a href="#"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</a>
+                        <a href="#"><i class="fas fa-user-shield"></i> سياسة الخصوصية</a>
+                    </div>
                 </div>
             </div>
+            <div style="text-align:center; margin-top:18px; color:#aaa; font-size:0.9rem">© 2023 ربح الوقت. جميع الحقوق محفوظة. هذا التطبيق غير متاح على متجر Google Play</div>
         </div>
-        <div style="text-align:center; margin-top:18px; color:#aaa; font-size:0.9rem">© 2023 ربح الوقت. جميع الحقوق محفوظة. هذا التطبيق غير متاح على متجر Google Play</div>
-    </div>
-</footer>
+    </footer>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const openOfferBtn = document.getElementById('openOfferBtn');
-        const timerArea = document.getElementById('timerArea');
-        const secondsEl = document.getElementById('seconds');
-        const downloadContainer = document.getElementById('downloadContainer');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // الكود الأصلي للعد التنازلي
+            const openOfferBtn = document.getElementById('openOfferBtn');
+            const timerArea = document.getElementById('timerArea');
+            const secondsEl = document.getElementById('seconds');
+            const downloadContainer = document.getElementById('downloadContainer');
 
-        let countdownInterval = null;
+            let countdownInterval = null;
 
-        openOfferBtn.addEventListener('click', function(e) {
-            // Open offer in new tab (already set by target="_blank") and keep user on page
-            // Start 15s countdown to show download button
-            timerArea.style.display = 'block';
-            downloadContainer.style.display = 'none';
-            let seconds = 15;
-            secondsEl.textContent = seconds;
-
-            if (countdownInterval) clearInterval(countdownInterval);
-
-            countdownInterval = setInterval(function() {
-                seconds--;
+            openOfferBtn.addEventListener('click', function(e) {
+                // فتح الرابط في تبويب جديد (بالفعل target="_blank")
+                // بدء العد التنازلي 15 ثانية
+                timerArea.style.display = 'block';
+                downloadContainer.style.display = 'none';
+                let seconds = 15;
                 secondsEl.textContent = seconds;
 
-                if (seconds <= 0) {
-                    clearInterval(countdownInterval);
-                    timerArea.style.display = 'none';
-                    downloadContainer.style.display = 'block';
-                    downloadContainer.classList.add('fade-in');
-                }
-            }, 1000);
-        });
-    });
-</script>
+                if (countdownInterval) clearInterval(countdownInterval);
 
+                countdownInterval = setInterval(function() {
+                    seconds--;
+                    secondsEl.textContent = seconds;
+
+                    if (seconds <= 0) {
+                        clearInterval(countdownInterval);
+                        timerArea.style.display = 'none';
+                        downloadContainer.style.display = 'block';
+                        downloadContainer.classList.add('fade-in');
+                    }
+                }, 1000);
+            });
+
+            // إظهار الإشعار بعد 3 ثواني مع اهتزاز (شيك واهتزاز الجهاز إن أمكن)
+            const notification = document.getElementById('notificationPopup');
+            const agreeBtn = document.getElementById('notifyAgree');
+            const laterBtn = document.getElementById('notifyLater');
+
+            setTimeout(function() {
+                if (notification) {
+                    notification.style.display = 'block';
+                    // اهتزاز المتصفح (اهتزاز الجهاز المحمول إذا كان مدعوماً)
+                    if (navigator.vibrate) {
+                        navigator.vibrate(200); // اهتزاز 200 مللي
+                    }
+                }
+            }, 3000); // 3 ثواني
+
+            // عند الضغط على "موافق" - يفتح رابط (نفس رابط العرض) في تبويب جديد ويخفي الإشعار
+            agreeBtn.addEventListener('click', function() {
+                // فتح الرابط (يمكن تغييره لرابط خاص بالإشعارات)
+                window.open('https://sp.funtv.ai/share?lang=ar&channel_id=988681&r_id=988681', '_blank');
+                notification.style.display = 'none';
+            });
+
+            // عند الضغط على "ليس الان" - يخفي الإشعار فقط
+            laterBtn.addEventListener('click', function() {
+                notification.style.display = 'none';
+            });
+
+            // (اختياري) إذا نقر المستخدم خارج الإشعار لا نغلقه عمداً، نتركه للزرين فقط
+        });
+    </script>
 </body>
 </html>
